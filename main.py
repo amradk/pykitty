@@ -1,5 +1,5 @@
 import pygame
-import gameobject
+from gameobject import GameObject
 from pygame import *
 
 WIN_WIDTH = 800 #Ширина создаваемого окна
@@ -19,13 +19,13 @@ level = [
        "gggggggssssssssgggggggggg",
        "ggggggggggggggggggggggggg",
        "ggggggggggggggggggggggggg",
-       "aaaaaaaaaaaaaaaaaaaaaaaaa",
+       "rrrrrrrrrrrrrrrrrrrrrrrrr",
        "sssssssssssssssssssssssss",
        "sssssssssssssssssssssssss",
-       "aaaaaaaaaaaaaaaaaaaaaaaaa",
-       "aaaaaaaaaaaaaaaaaaaaaaaaa",
-       "aaaaaaaaaaaaaaaaaaaaaaaaa",
-       "aaaaaaaaaaaaaaaaaaaaaaaaa",
+       "rrrrrrrrrrrrrrrrrrrrrrrrc",
+       "rrrrrrrrrrrrrrrrrrrrrrrrc",
+       "crrrrrrrrrrrrrrrrrrrrrrrr",
+       "crrrrrrrrrrrrrrrrrrrrrrrr",
        "sssssssssssssssssssssssss",
        "sssssssssssssssssssssssss",
        "ggggggggggggggggggggggggg",
@@ -40,7 +40,7 @@ def create_map(grass_gp, ground_gp, sand_gp, athphalt_gp, border_gp, level):
             # grass
             if col == "g":
                 #создаем блок, заливаем его цветом и рисеум его
-                pf = GameObject(grass_gp, speedx = 0, speedy = 0, x = 0, y = 0, width=TILE_WIDTH, heigh=TILE_HEIGHT)
+                pf = GameObject(grass_gp, 0, 0, x, y, TILE_WIDTH, TILE_HEIGHT)
                 pf.set_color("#39c936")
                 grass_gp.add(pf) 
             # sand
@@ -52,60 +52,32 @@ def create_map(grass_gp, ground_gp, sand_gp, athphalt_gp, border_gp, level):
             # asphalt
             if col == "a":
                 #создаем блок, заливаем его цветом и рисеум его
-                pf = GameObject(atphalt_gp, 0, 0, x, y, TILE_WIDTH, TILE_HEIGHT)
-                pf.fill(Color("#575352"))
-                athpalt_gp.add(pf) 
+                pf = GameObject(athphalt_gp, 0, 0, x, y, TILE_WIDTH, TILE_HEIGHT)
+                pf.set_color("#575352")
+                athphalt_gp.add(pf) 
             # ground
             if col == "G":
                 #создаем блок, заливаем его цветом и рисеум его
-                pf.fill(Color("#26100a"))
+                pf = GameObject(ground_gp, 0, 0, x, y, TILE_WIDTH, TILE_HEIGHT)
+                pf.set_color("#26100a")
                 ground_gp.add(pf) 
             # border
             if col == "b":
                 #создаем блок, заливаем его цветом и рисеум его
-                pf.fill(Color("#290505"))
+                pf = GameObject(border_gp, 0, 0, x, y, TILE_WIDTH, TILE_HEIGHT)
+                pf.set_color("#290505")
                 border_gp.add(pf)
 
             x += TILE_WIDTH #блоки платформы ставятся на ширине блоков
         y += TILE_HEIGHT    #то же самое и с высотой
         x = 0                   #на каждой новой строчке начинаем с нуля
 
-def draw_map(screen, grass_gp, ground_gp, sand_gp, athpalt_gp, border_gp, level):
-    x=y=0 # координаты
-    for row in level: # вся строка
-        for col in row: # каждый символ
-            pf = Surface((TILE_WIDTH,TILE_HEIGHT))
-            # grass
-            if col == "g":
-                #создаем блок, заливаем его цветом и рисеум его
-                pf.fill(Color("#39c936"))
-                grass_gp.add(pf) 
-            # sand
-            if col == "s":
-                #создаем блок, заливаем его цветом и рисеум его
-                pf.fill(Color("#e2f511"))
-                sand_gp.add(pf) 
-            # asphalt
-            if col == "a":
-                #создаем блок, заливаем его цветом и рисеум его
-                pf.fill(Color("#575352"))
-                athpalt_gp.add(pf) 
-            # ground
-            if col == "G":
-                #создаем блок, заливаем его цветом и рисеум его
-                pf.fill(Color("#26100a"))
-                ground_gp.add(pf) 
-            # border
-            if col == "b":
-                #создаем блок, заливаем его цветом и рисеум его
-                pf.fill(Color("#290505"))
-                border_gp.add(pf) 
-                
-            screen.blit(pf,(x,y))
-                        
-            x += TILE_WIDTH #блоки платформы ставятся на ширине блоков
-        y += TILE_HEIGHT    #то же самое и с высотой
-        x = 0                   #на каждой новой строчке начинаем с нуля
+def draw_map(screen, grass_gp, ground_gp, sand_gp, athphalt_gp, border_gp):
+   grass_gp.draw(screen)
+   ground_gp.draw(screen)
+   sand_gp.draw(screen)
+   athphalt_gp.draw(screen)
+   border_gp.draw(screen)
 
 def main():
     pygame.init() # Инициация PyGame, обязательная строчка 
@@ -113,9 +85,9 @@ def main():
     pygame.display.set_caption("pyKitty") # Пишем в шапку
     bg = Surface((WIN_WIDTH,WIN_HEIGHT)) # Создание видимой поверхности
                                          # будем использовать как фон
-    bg.fill(Color(BACKGROUND_COLOR))     # Заливаем поверхность сплошным цветом
+    #bg.fill(Color(BACKGROUND_COLOR))     # Заливаем поверхность сплошным цветом
     timer = pygame.time.Clock()
-    draw_map(screen, level)
+    
 
     player =  Surface((TILE_WIDTH,TILE_HEIGHT))
     player_x = int((WIN_WIDTH/TILE_WIDTH)/2)
@@ -126,9 +98,11 @@ def main():
     # Группы для спрайтов
     sg_grass = pygame.sprite.Group()
     sg_sand = pygame.sprite.Group()
-    sg_athpalt = pygame.sprite.Group()
+    sg_athphalt = pygame.sprite.Group()
     sg_ground = pygame.sprite.Group()
     sg_border = pygame.sprite.Group()
+
+    create_map(sg_grass, sg_ground, sg_sand, sg_athphalt, sg_border, level)
 
     while 1: # Основной цикл программы
         for e in pygame.event.get(): # Обрабатываем события
@@ -150,10 +124,10 @@ def main():
             if e.type == KEYUP and e.key == K_LEFT:
                 left = False
         screen.blit(bg, (0,0))      # Каждую итерацию необходимо всё перерисовывать 
-        draw_map(screen, level)
+        draw_map(screen, sg_grass, sg_ground, sg_sand, sg_athphalt, sg_border)
         screen.blit(player,(player_x,player_y))
-        pygame.display.update()     # обновление и вывод всех изменений на экран
-        
+        #pygame.display.update()     # обновление и вывод всех изменений на экран
+        pygame.display.flip()
     
 
 if __name__ == "__main__":
