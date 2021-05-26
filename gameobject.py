@@ -15,7 +15,6 @@ class GameObject(pygame.sprite.Sprite):
         self.start_y = y
         self.start_x = x
         self.color = '#000000'
-        self.add(self.group)
 
     def set_color(self, color):
         self.color = color
