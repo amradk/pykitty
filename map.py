@@ -1,6 +1,8 @@
 import pygame
+import random
 from gameobject import GameObject
 from car import Car
+from carmanager import CarManager
 
 WIN_WIDTH = 800 #Ширина создаваемого окна
 WIN_HEIGHT = 600 # Высота
@@ -16,8 +18,9 @@ TILE_HEIGHT = 32
 #         self.type = type
 
 class GameMap():
-    def __init__(self, level):
+    def __init__(self, screen, level):
         """Manage maps"""
+        self.screen = screen
         self.level = level
         # groups for base tiles
         # there is should be react or sprite.Groups
@@ -27,6 +30,7 @@ class GameMap():
         self.grp_ground = pygame.sprite.Group()
         self.grp_border = pygame.sprite.Group()
         self.grp_car = pygame.sprite.Group()
+        self.car_points = []
 
     def load_ground_map(self):
         x=y=0 # координаты
@@ -75,13 +79,15 @@ class GameMap():
             for col in row: # каждый символ
                 # the star point for car ganeration, forward x grown
                 if col == "c":
-                    pf = Car("#37bd3b", 1, x, y)    
+                    cm = CarManager(self.screen, x, y, random.randrange(2,7), 1, 3)
+                    cm.create_cars()    
                     #pf.set_color("#37bd3b")
-                    self.grp_car.add(pf)
+                    self.car_points.append(cm)
                 if col == "C":
-                    pf = Car("#1945e3", -2, x, y)    
-                    #pf.set_color("#1945e3")
-                    self.grp_car.add(pf)
+                    cm = CarManager(self.screen, x, y, random.randrange(1,6), -1, 3)
+                    cm.create_cars()    
+                    #pf.set_color("#37bd3b")
+                    self.car_points.append(cm)
 
                 x += TILE_WIDTH #блоки платформы ставятся на ширине блоков
             y += TILE_HEIGHT    #то же самое и с высотой
@@ -97,15 +103,19 @@ class GameMap():
         self.grp_road.update()
         self.grp_ground.update()
         self.grp_border.update()
-        self.grp_car.update()        
+        self.grp_car.update()
+        for cm in self.car_points:
+            cm.update()
 
-    def draw(self, screen):
+    def draw(self):
         # При каждом проходе цикла перерисовывается экран.
         #self.screen.fill((0, 0, 0))
         # Отображение последнего прорисованного экрана.
-        self.grp_sand.draw(screen)
-        self.grp_grass.draw(screen)
-        self.grp_road.draw(screen)
-        self.grp_ground.draw(screen)
-        self.grp_border.draw(screen)
-        self.grp_car.draw(screen)
+        self.grp_sand.draw(self.screen)
+        self.grp_grass.draw(self.screen)
+        self.grp_road.draw(self.screen)
+        self.grp_ground.draw(self.screen)
+        self.grp_border.draw(self.screen)
+        self.grp_car.draw(self.screen)
+        for cm in self.car_points:
+            cm.draw()

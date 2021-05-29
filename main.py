@@ -46,8 +46,8 @@ level = {
         "-------------------------",
         "-------------------------",
         "------------------------C",
-        "-------------------------",
-        "-------------------------",
+        "------------------------C",
+        "c------------------------",
         "c------------------------",
         "-------------------------",
         "-------------------------",
@@ -73,7 +73,7 @@ def main():
     player.fill(Color("#ebe4e4"))
     player_speed = 10
 
-    lvl1 = GameMap(level)
+    lvl1 = GameMap(screen, level)
     lvl1.load_ground_map()
     lvl1.load_object_map()
     
@@ -99,7 +99,7 @@ def main():
                 left = False
         screen.blit(bg, (0,0))      # Каждую итерацию необходимо всё перерисовывать 
         lvl1.update()
-        lvl1.draw(screen)
+        lvl1.draw()
         screen.blit(player,(player_x,player_y))
         #pygame.display.update()     # обновление и вывод всех изменений на экран
         pygame.display.flip()
