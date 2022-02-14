@@ -1,7 +1,9 @@
 import pygame
 from gameobject import GameObject
+from player import Player
 from pygame import *
 from map import GameMap
+from hud import Hud
 
 WIN_WIDTH = 800 #Ширина создаваемого окна
 WIN_HEIGHT = 600 # Высота
@@ -65,13 +67,11 @@ def main():
                                          # будем использовать как фон
     #bg.fill(Color(BACKGROUND_COLOR))     # Заливаем поверхность сплошным цветом
     clock = pygame.time.Clock()
-    
 
-    player =  Surface((TILE_WIDTH,TILE_HEIGHT))
-    player_x = int((WIN_WIDTH/TILE_WIDTH)/2)
-    player_y = WIN_HEIGHT - TILE_HEIGHT
-    player.fill(Color("#ebe4e4"))
-    player_speed = 10
+    pl = Player(Color("#ebe4e4"), 3, int((WIN_WIDTH/2) - (TILE_WIDTH/2)), WIN_HEIGHT - TILE_HEIGHT)
+    pl_grp = pygame.sprite.Group()
+    pl_grp.add(pl)
+    hud = Hud(screen, pl)
 
     lvl1 = GameMap(screen, level)
     lvl1.load_ground_map()
@@ -82,26 +82,35 @@ def main():
         for e in pygame.event.get(): # Обрабатываем события
             if e.type == QUIT:
                 raise(SystemExit, "QUIT")
-            if e.type == KEYDOWN and e.key == K_UP:
-                player_y = player_y - player_speed
-            if e.type == KEYDOWN and e.key == K_DOWN:
-                player_y = player_y + player_speed
-            if e.type == KEYDOWN and e.key == K_LEFT:
-                player_x = player_x - player_speed
-            if e.type == KEYDOWN and e.key == K_RIGHT:
-                player_x = player_x + player_speed
+            elif e.type == pygame.KEYDOWN:
+                if e.key == K_DOWN:
+                    pl.set_move_down()
+                if e.key == K_LEFT:
+                    pl.set_move_left()
+                if e.key == K_RIGHT:
+                    pl.set_move_right()
+                if e.key == K_UP:
+                    pl.set_move_up()
 
-            if e.type == KEYUP and e.key == K_UP:
-                up = False
-            if e.type == KEYUP and e.key == K_RIGHT:
-                right = False
-            if e.type == KEYUP and e.key == K_LEFT:
-                left = False
+            elif e.type == pygame.KEYUP:
+                if e.key == K_DOWN:
+                    pl.unset_move_down()
+                if  e.key == K_LEFT:
+                    pl.unset_move_left()
+                if  e.key == K_RIGHT:
+                    pl.unset_move_right()
+                if e.key == K_UP:
+                    pl.unset_move_up()
+
         screen.blit(bg, (0,0))      # Каждую итерацию необходимо всё перерисовывать 
         lvl1.update()
         lvl1.draw()
-        screen.blit(player,(player_x,player_y))
-        #pygame.display.update()     # обновление и вывод всех изменений на экран
+        hits = pygame.sprite.groupcollide(sp_asteroids, self.sp_bullets, False, True)
+        pl.update()
+        pl_grp.draw(screen)
+        hud.draw()
+        #screen.blit(pl.image,(pl.rect.left,pl.rect.top))
+        pygame.display.update()     # обновление и вывод всех изменений на экран
         pygame.display.flip()
     
 
