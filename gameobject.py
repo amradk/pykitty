@@ -10,7 +10,7 @@ class GameObject(pygame.sprite.Sprite):
         self.speedy = speedy
         self.rect = self.image.get_rect()
         self.rect.top = y
-        self.rect.centerx = x
+        self.rect.left = x
         # Устанавливаем начальные координаты
         self.start_y = y
         self.start_x = x
@@ -22,7 +22,7 @@ class GameObject(pygame.sprite.Sprite):
 
     def update(self):
         self.rect.top += self.speedy
-        self.rect.centerx += self.speedx
+        self.rect.left += self.speedx
 
     def draw(self):
         self.image.fill(pygame.Color(self.color))
@@ -49,4 +49,4 @@ class GameObject(pygame.sprite.Sprite):
         self.rect.top = y
 
     def set_x(self, x):
-        self.rect.centerx = x
+        self.rect.left = x
