@@ -14,6 +14,8 @@ class Player(GameObject):
         self.moving_up = False
         self.moving_down = False
 
+        self.noise_lvl = 0
+
     def update(self):
         if self.is_active == True:
             super().update()
@@ -25,15 +27,11 @@ class Player(GameObject):
         self.is_active = True
 
     def set_move_right(self):
-        print("Move right")
-        print("Pl X is:", self.rect.left)
-        print("Pl Y is:", self.rect.top)
         self.moving_right = True
         self.speedx = self.speed
         self.speedy = 0
 
     def set_move_left(self):
-        print("Move left")
         self.moving_left = True
         self.speedx = -self.speed
         self.speedy = 0
@@ -63,3 +61,6 @@ class Player(GameObject):
     def unset_move_down(self):
         self.moving_down = False
         self.speedy = 0
+
+    def set_speed(self, new_speed):
+        self.speed = new_speed

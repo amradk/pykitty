@@ -1,6 +1,5 @@
 import pygame
 
-
 class GameObject(pygame.sprite.Sprite):
     def __init__(self, speedx = 0, speedy = 0, x = 0, y = 0, width=32, heigh=32):
         pygame.sprite.Sprite.__init__(self)
