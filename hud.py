@@ -1,32 +1,27 @@
 import pygame
+from const import *
 from gameobject import GameObject
 
 class Hud():
-    def __init__(self, screen, player):
+    def __init__(self, screen, attempts):
         self.screen = screen
         self.screen_rect = self.screen.get_rect()
         (self.screen_width, self.screen_height) = self.screen.get_size()
-        # define colors
-        self.WHITE = (255, 255, 255)
-        self.BLACK = (0, 0, 0)
-        self.RED = (255, 0, 0)
-        self.GREEN = (0, 255, 0)
-        self.BLUE = (0, 0, 255)
-        self.YELLOW = (255, 255, 0)
-        self.BAR_LENGTH = 100
-        self.BAR_HEIGHT = 10
-        #
+        self.num_of_attempts = attempts
+        self.attempts_sprite_list = []
+
         self.attempts = pygame.sprite.Group()
         #for i in player.get_attempts():
         x = 10
-        for i in range(3):
+        for i in range(self.num_of_attempts):
             attempt = GameObject(x=x, y=10, width=16, heigh=16)
-            attempt.set_color(self.RED)
+            self.attempts_sprite_list.append(attempt)
+            attempt.set_color(RED)
             x += 32
             self.attempts.add(attempt)
 
     def draw_text(self, text, x, y):
-        text_surface = self.font.render(text, True, self.WHITE)
+        text_surface = self.font.render(text, True, WHITE)
         text_rect = text_surface.get_rect()
         text_rect.midtop = (x, y)
         self.screen.blit(text_surface, text_rect)
@@ -44,3 +39,11 @@ class Hud():
 
     def draw(self):
         self.attempts.draw(self.screen)
+
+    def set_attempts(self, attempts):
+        print("Attempt=",len(self.attempts_sprite_list))
+        # кол-во попыток усеньшилось
+        if (self.num_of_attempts - attempts) > 0:
+            self.attempts.remove(self.attempts_sprite_list[-1])
+            del self.attempts_sprite_list[-1]
+        self.num_of_attempts = attempts

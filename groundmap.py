@@ -56,27 +56,6 @@ class GroundMap(GameMap):
             y += TILE_HEIGHT    #то же самое и с высотой
             x = 0
 
-    def load_object_map(self):
-        x=y=0 # координаты
-
-        for row in self.level['objects']: # вся строка
-            for col in row: # каждый символ
-                # the star point for car ganeration, forward x grown
-                if col == "c":
-                    cm = CarManager(self.screen, 0 - 480, y, random.randrange(2,7), 1, 3)
-                    cm.create_cars()
-                    #pf.set_color("#37bd3b")
-                    self.car_points.append(cm)
-                if col == "C":
-                    cm = CarManager(self.screen, WIN_WIDTH, y, random.randrange(1,6), -1, 3)
-                    cm.create_cars()    
-                    #pf.set_color("#37bd3b")
-                    self.car_points.append(cm)
-
-                x += TILE_WIDTH #блоки платформы ставятся на ширине блоков
-            y += TILE_HEIGHT    #то же самое и с высотой
-            x = 0
-
     def update(self):
         self.grp_sand.update()
         self.grp_grass.update()

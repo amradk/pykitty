@@ -1,6 +1,5 @@
 import pygame
 import random
-#import sys
 from car import Car
 
 class CarManager():
@@ -19,7 +18,6 @@ class CarManager():
 
     def choose_speed(self):
         self.speed = random.randrange(1,6) * self.direction
-
 
     def update(self):
         if self.active_cars <= 0:
@@ -62,3 +60,9 @@ class CarManager():
             gap = random.choice(self.gap_sizes)
             self.grp_car.add(Car(color, self.speed, x, self.start_y, car_size, 32))
             x = x + car_size + gap
+
+    def check_collisions(self, player_group):
+        if pygame.sprite.groupcollide(player_group, self.grp_car, False, False):
+            return True
+        else: 
+            return False
